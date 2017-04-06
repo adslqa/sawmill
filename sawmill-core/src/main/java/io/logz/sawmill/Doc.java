@@ -66,6 +66,35 @@ public class Doc {
         context.put(leafKey, value);
     }
 
+
+    /**
+     * removes field from source
+     * @param paths array of paths
+     * @return {@code true} if field has been removed
+     *         {@code false} if field wasn't exist
+     */
+    public boolean removeField(String[] paths) {
+        for (String path : paths) {
+            if (!hasField(path)) {
+                return false;
+            }
+            Map<String, Object> context = source;
+            String[] pathElements = path.split("\\.");
+
+            String leafKey = pathElements[pathElements.length - 1];
+
+            if (pathElements.length > 1) {
+                String pathWithoutLeaf = path.substring(0, path.lastIndexOf("."));
+                context = getField(pathWithoutLeaf);
+            }
+
+            context.remove(leafKey);
+        }
+
+        return true;
+    }
+
+
     /**
      * removes field from source
      * @param path
@@ -73,22 +102,8 @@ public class Doc {
      *         {@code false} if field wasn't exist
      */
     public boolean removeField(String path) {
-        if (!hasField(path)) {
-            return false;
-        }
-        Map<String, Object> context = source;
-        String[] pathElements = path.split("\\.");
-
-        String leafKey = pathElements[pathElements.length - 1];
-
-        if (pathElements.length > 1) {
-            String pathWithoutLeaf = path.substring(0, path.lastIndexOf("."));
-            context = getField(pathWithoutLeaf);
-        }
-
-        context.remove(leafKey);
-
-        return true;
+        String[] pathArray = new String[] { path };
+        return removeField(pathArray);
     }
 
     public void appendList(String path, Object value) {
