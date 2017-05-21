@@ -72,7 +72,7 @@ public class TemplateTest {
     @Test
     public void testDateTemplate() {
         String dateFormat = "dd.mm.yyyy";
-        Template template = new TemplateService().createTemplate("Today is {{#date}}" + dateFormat + "{{/date}}");
+        Template template = new TemplateService().createTemplate("Today is {{#dateTemplate}}" + dateFormat + "{{/dateTemplate}}");
         Doc doc = createDoc("field1", "value1");
 
         String expectedDate =  DateTimeFormatter.ofPattern(dateFormat).format(ZonedDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneOffset.UTC));
@@ -82,7 +82,7 @@ public class TemplateTest {
     @Test
     public void testInvalidDateTemplate() {
         String dateFormat = "hello";
-        Template template = new TemplateService().createTemplate("Today is {{#date}}" + dateFormat + "{{/date}}");
+        Template template = new TemplateService().createTemplate("Today is {{#dateTemplate}}" + dateFormat + "{{/dateTemplate}}");
         Doc doc = createDoc("field1", "value1");
 
         assertThatThrownBy(() -> template.render(doc)).isInstanceOf(IllegalArgumentException.class);
